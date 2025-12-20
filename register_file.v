@@ -33,8 +33,14 @@ module register_file (
         end
     end
     
-    // Asynchronous read (combinational)
-    assign read_data1 = (read_reg1 == 5'd0) ? 32'd0 : registers[read_reg1];
-    assign read_data2 = (read_reg2 == 5'd0) ? 32'd0 : registers[read_reg2];
+    // Asynchronous read with internal forwarding
+    // If we're writing to the register being read in the same cycle, forward the write data
+    assign read_data1 = (read_reg1 == 5'd0) ? 32'd0 :
+                        (reg_write && (write_reg == read_reg1) && (write_reg != 5'd0)) ? write_data :
+                        registers[read_reg1];
+    
+    assign read_data2 = (read_reg2 == 5'd0) ? 32'd0 :
+                        (reg_write && (write_reg == read_reg2) && (write_reg != 5'd0)) ? write_data :
+                        registers[read_reg2];
     
 endmodule
