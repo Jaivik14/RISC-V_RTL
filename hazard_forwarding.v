@@ -46,15 +46,16 @@ module forwarding_unit (
 
     // Forward A (for RS register)
     always @(*) begin
-        // EX hazard (EX-to-EX forwarding)
+        // EX hazard (EX-to-EX forwarding) - highest priority
         if (exmem_reg_write && 
             (exmem_write_reg != 5'd0) && 
             (exmem_write_reg == idex_rs)) begin
             forward_a = 2'b10;
         end
-        // MEM hazard (MEM-to-EX forwarding)
+        // MEM hazard (MEM-to-EX forwarding) - only if no EX hazard
         else if (memwb_reg_write && 
                  (memwb_write_reg != 5'd0) && 
+                 !(exmem_reg_write && (exmem_write_reg == idex_rs)) &&
                  (memwb_write_reg == idex_rs)) begin
             forward_a = 2'b01;
         end
@@ -66,15 +67,16 @@ module forwarding_unit (
     
     // Forward B (for RT register)
     always @(*) begin
-        // EX hazard (EX-to-EX forwarding)
+        // EX hazard (EX-to-EX forwarding) - highest priority
         if (exmem_reg_write && 
             (exmem_write_reg != 5'd0) && 
             (exmem_write_reg == idex_rt)) begin
             forward_b = 2'b10;
         end
-        // MEM hazard (MEM-to-EX forwarding)
+        // MEM hazard (MEM-to-EX forwarding) - only if no EX hazard
         else if (memwb_reg_write && 
                  (memwb_write_reg != 5'd0) && 
+                 !(exmem_reg_write && (exmem_write_reg == idex_rt)) &&
                  (memwb_write_reg == idex_rt)) begin
             forward_b = 2'b01;
         end
