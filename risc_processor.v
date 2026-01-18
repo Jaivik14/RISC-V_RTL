@@ -1,7 +1,6 @@
 // ============================================================================
 // 32-bit Pipelined RISC Processor with Branch Prediction
 // Author: Jaivik Patel
-// Target: AMD Hardware Interview Project
 // Description: 5-stage pipeline (IF, ID, EX, MEM, WB) with hazard detection
 // ============================================================================
 
